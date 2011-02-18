@@ -24,7 +24,7 @@ class nice_dash {
   /**
    * Return a custom widget.
    */
-  function nice_dash_widget_custom($row) {
+  function nice_dash_widget_custom($widget) {
     $bid = $widget->widget_key;
     $split = explode('-', $bid, 2);
     if (count($split) === 2) {
