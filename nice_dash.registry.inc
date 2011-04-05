@@ -226,7 +226,8 @@ function _nice_dash_menu() {
     'page callback' => '_nice_dash_dashboard_page',
     'access callback' => '_nice_dash_dashboard_access',
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'nice_dash.pages.inc'
+    'file' => 'nice_dash.pages.inc',
+    'weight' => -100,
   );
 
   // Implement all the dashboard menu calls.
