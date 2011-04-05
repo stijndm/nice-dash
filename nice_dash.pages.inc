@@ -157,8 +157,9 @@ function nice_dash_dashboard_overview_page_submit(&$form, &$form_state) {
     $object->did = $form[$did]['did']['#value'];
     drupal_write_record('nice_dash_dashboards', $object, 'did');
   }
+  
   nice_dash_flush_caches();
-  menu_rebuild();
+  module_invoke('menu', 'rebuild');
   drupal_set_message(t('Your settings have been saved.'));
 }
 
