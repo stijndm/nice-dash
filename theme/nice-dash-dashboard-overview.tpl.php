@@ -22,7 +22,7 @@
 
       <tr class="<?php print $count % 2 == 0 ? 'odd' : 'even'; ?> draggable property-row">
         <td><?php print $row->title; ?></td>
-        <td><?php print l(t('View'), 'admin/dashboard/'. $row->did) .' | '. l(t('Edit'), 'admin/dashboard/configure/'. $row->did .'/edit') .' | '. l(t('Delete'), 'admin/dashboard/configure/'. $row->did .'/delete'); ?></td>
+        <td><?php print l(t('View'), 'admin/dashboard/'. $row->did) .' | '. l(t('Edit'), 'admin/build/dashboard/dashboards/'. $row->did .'/edit') .' | '. l(t('Delete'), 'admin/build/dashboard/dashboards/'. $row->did .'/delete'); ?></td>
         <td><?php print $row->weight; ?></td>
       </tr>
 

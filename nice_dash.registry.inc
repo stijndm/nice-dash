@@ -94,7 +94,133 @@ function _nice_dash_get_custom_widgets() {
  * Return menu items.
  */
 function _nice_dash_menu() {
+  
+  //admin
+  $items['admin/build/dashboard'] = array(
+    'title' => 'Dashboard',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_overview_page'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'nice_dash.pages.inc'
+  );
 
+  //admin dashboards
+  $items['admin/build/dashboard/dashboards'] = array(
+    'title' => 'Dashboards',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_overview_page'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+    'file' => 'nice_dash.pages.inc'
+  );
+  
+  $items['admin/build/dashboard/dashboards/list'] = array(
+    'title' => 'Overview',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0
+  );
+  
+  $items['admin/build/dashboard/dashboards/add'] = array(
+    'title' => 'Create new dashboard',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_settings_form'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'nice_dash.pages.inc'
+  );
+  
+  //TODO: dashboard load function
+  $items['admin/build/dashboard/dashboards/%/edit'] = array(
+    'title' => 'Edit dashboard',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_settings_form', 4),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'nice_dash.pages.inc'
+  );
+
+  $items['admin/build/dashboard/dashboards/%/delete'] = array(
+    'title' => 'Delete dashboard',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_delete_form', 4),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'nice_dash.pages.inc'
+  );
+  
+  //admin widgets
+  //TODO: widgets overview
+  $items['admin/build/dashboard/widgets'] = array(
+    'title' => 'Widgets',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_dashboard_overview_page'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'nice_dash.pages.inc'
+  );
+  
+  $items['admin/build/dashboard/widgets/list'] = array(
+    'title' => 'Overview',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0
+  );
+  
+  $items['admin/build/dashboard/widgets/add'] = array(
+    'title' => 'Create widget',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_widget_settings_form'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    'file' => 'nice_dash.pages.inc'
+  );
+
+  //TODO: menu loader
+  $items['admin/build/dashboard/widgets/%/delete'] = array(
+    'title' => 'Delete widget',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_widget_delete_form', 4),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'nice_dash.pages.inc'
+  );
+
+  $items['admin/build/dashboard/widgets/%/edit'] = array(
+    'title' => 'Edit widget',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_widget_settings_form', 4),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'nice_dash.pages.inc'
+  );
+
+  //admin settings
+  $items['admin/build/dashboard/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_settings'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    'file' => 'nice_dash.pages.inc'
+  );
+  
+  //admin plugins
+  $items['admin/build/dashboard/plugins'] = array(
+    'title' => 'Plugins',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nice_dash_plugins_settings_form'),
+    'access arguments' => array('administer nice dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+    'file' => 'nice_dash.pages.inc'
+  );
+
+  //dashboards
   $items['admin/dashboard'] = array(
     'title' => 'Dashboard',
     'page callback' => '_nice_dash_dashboard_page',
@@ -103,133 +229,15 @@ function _nice_dash_menu() {
     'file' => 'nice_dash.pages.inc'
   );
 
-  $items['admin/dashboard/view'] = array(
-    'title' => 'View',
-    'page callback' => '_nice_dash_dashboard_page',
-    'access callback' => '_nice_dash_dashboard_access',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -1,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/configure'] = array(
-    'title' => 'Configure',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_dashboard_overview_page'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $weight = 0;
-  $items['admin/dashboard/configure/overview'] = array(
-    'title' => 'Overview',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_dashboard_overview_page'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => $weight++,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/configure/settings'] = array(
-    'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_settings'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => $weight++,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/configure/create-dashboard'] = array(
-    'title' => 'Create dashboard',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_dashboard_settings_form'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => $weight++,
-    'file' => 'nice_dash.pages.inc'
-  );
-  
-  $items['admin/dashboard/configure/%/edit'] = array(
-    'title' => 'Create new dashboard',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_widget_settings_form', 3),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/configure/%/delete'] = array(
-    'title' => 'Create new dashboard',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_dashboard_delete_form', 3),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  // Widgets.
-  $items['admin/dashboard/configure/create-widget'] = array(
-    'title' => 'Create widget',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_widget_settings_form'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => $weight++,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  // Plugins.
-  $items['admin/dashboard/configure/plugins'] = array(
-    'title' => 'Plugins',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_plugins_settings_form'),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => $weight++,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/widget/%/delete'] = array(
-    'title' => 'Delete widget',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_widget_delete_form', 3),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'nice_dash.pages.inc'
-  );
-
-  $items['admin/dashboard/widget/%/edit'] = array(
-    'title' => 'Edit widget',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_widget_settings_form', 3),
-    'access arguments' => array('administer nice dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'nice_dash.pages.inc'
-  );
-
   // Implement all the dashboard menu calls.
   $dashboards = nice_dash_get_object();
 
   if (count($dashboards) > 0) {
-
     foreach ($dashboards as $dashboard) {
-      $items['admin/dashboard/configure/'. $dashboard->did .'/edit'] = array(
-        'title' => 'Edit '. $dashboard->name,
-        'weight' => $dashboard->weight,
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('nice_dash_dashboard_settings_form', 3),
-        'access arguments' => array('administer nice dashboard'),
-        'type' => MENU_CALLBACK,
-        'file' => 'nice_dash.pages.inc'
-      );
-
-      $items['admin/dashboard/view/'. $dashboard->did] = array(
+      $items['admin/dashboard/'. $dashboard->did] = array(
         'title' => $dashboard->name,
         'page callback' => 'nice_dash_dashboard_page',
-        'page arguments' => array(3),
+        'page arguments' => array(2),
         'access callback' => 'nice_dash_dashboard_access',
         'access arguments' => array($dashboard),
         'type' => MENU_LOCAL_TASK,
@@ -237,13 +245,6 @@ function _nice_dash_menu() {
         'file' => 'nice_dash.pages.inc'
       );
     }
-  }
-  else {
-    $items['admin/dashboard/configure']['type'] = MENU_DEFAULT_LOCAL_TASK;
-    $items['admin/dashboard/view']['type'] = MENU_LOCAL_TASK;
-    $items['admin/dashboard'] = $items['admin/dashboard/configure'];
-    $items['admin/dashboard']['type'] = MENU_NORMAL_ITEM;
-    $items['admin/dashboard']['title'] = 'Dashboard';
   }
 
   return $items;

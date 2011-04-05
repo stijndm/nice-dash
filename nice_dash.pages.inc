@@ -86,7 +86,7 @@ function nice_dash_dashboard_page($did = NULL) {
   }
 
   if (!count($regions)) {
-    drupal_set_message(t('You have not configured any widgets yet. Goto the <a href="@settings-page">dashboard settings</a> and configure some widgets first.', array('@settings-page' => url('admin/dashboard/configure/' . $did . '/edit'))), 'warning');
+    drupal_set_message(t('You have not configured any widgets yet. Goto the <a href="@settings-page">dashboard settings</a> and configure some widgets first.', array('@settings-page' => url('admin/build/dashboard/dashboards/' . $did . '/edit'))), 'warning');
     return '';
   }
 
@@ -139,7 +139,7 @@ function nice_dash_dashboard_overview_page() {
 
   }
   else {
-    drupal_set_message(t('You have to create a dashboard first. You can create your first dashboard on the <a href="@create-page">dashboard create page</a>.', array('@create-page' => url("admin/dashboard/configure/create-dashboard"))), 'warning');
+    drupal_set_message(t('You have to create a dashboard first. You can create your first dashboard on the <a href="@create-page">dashboard create page</a>.', array('@create-page' => url("admin/build/dashboard/dashboards/add"))), 'warning');
     $output .= '<p>'. t('No dashboards configured.') .'</p>';
   }
 
@@ -372,10 +372,10 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
       $alias = strtolower($alias);
     }
     $alias = 'dashboard/'. $alias;
-    path_set_alias('admin/dashboard/view/'. $dashboard->did, $alias);
+    path_set_alias('admin/dashboard/'. $dashboard->did, $alias);
   }
   else {
-    path_set_alias('admin/dashboard/view/'. $dashboard->did);
+    path_set_alias('admin/dashboard/'. $dashboard->did);
   }
 
   // Rebuild menu.
@@ -403,7 +403,7 @@ function nice_dash_dashboard_delete_form($form_state, $did) {
   return confirm_form(
     $form,
     t('Are your sure you want to delete the dashboard %name', array('%name' => $dashboard->name)),
-    'admin/dashboard/configure',
+    'admin/build/dashboard',
     t('This action cannot be undone.'),
     t('Delete')
   );
@@ -416,14 +416,14 @@ function nice_dash_dashboard_delete_form_submit($form, &$form_state) {
   $did = $form_state['values']['did'];
   db_query("DELETE FROM {nice_dash_dashboards} WHERE did = %d", $did);
   db_query("DELETE FROM {nice_dash_config} WHERE did = %d", $did);
-  db_query("DELETE FROM {url_alias} WHERE src = '%s'", 'admin/dashboard/view/'. $did);
+  db_query("DELETE FROM {url_alias} WHERE src = '%s'", 'admin/dashboard/'. $did);
 
   // Rebuild menu.
   nice_dash_flush_caches();
   module_invoke('menu', 'rebuild');
 
   drupal_set_message(t('The dashboard has been removed'));
-  drupal_goto('admin/dashboard/configure');
+  drupal_goto('admin/build/dashboard');
 }
 
 /**
@@ -440,14 +440,14 @@ function nice_dash_widget_settings_form(&$form_state, $wid = NULL) {
     '#title' => t('Title'),
     '#size' => 60,
     '#required' => TRUE,
-    '#default_value' => $widget['title'],
+    '#default_value' => $widget->title,
   );
 
   $form['description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
     '#size' => 60,
-    '#default_value' => $widget['description'],
+    '#default_value' => $widget->description,
   );
 
   $block_info = array();
@@ -484,8 +484,8 @@ function nice_dash_widget_settings_form(&$form_state, $wid = NULL) {
   ksort($custom_options);
 
   // Default value from block select.
-  if ($widget['widget_key']) {
-    $block_default = $widget['widget_key'];
+  if ($widget->widget_key) {
+    $block_default = $widget->widget_key;
   }
   else {
     $block_default = -1;
@@ -508,7 +508,7 @@ function nice_dash_widget_settings_form(&$form_state, $wid = NULL) {
   }
 
   $form['wid'] = array('#type' => 'value', '#value' => $wid);
-  $form['#redirect'] = 'admin/dashboard/configure';
+  $form['#redirect'] = 'admin/build/dashboard';
 
   return $form;
 }
@@ -548,7 +548,7 @@ function nice_dash_widget_delete_form($form_state, $wid) {
   return confirm_form(
     $form,
     t('Are your sure you want to delete the widget'),
-    'admin/dashboard/configure',
+    'admin/build/dashboard',
     t('This action cannot be undone.'),
     t('Delete')
   );
@@ -563,7 +563,7 @@ function nice_dash_widget_delete_form_submit($form, &$form_state) {
   db_query("DELETE FROM {nice_dash_widgets} WHERE wid = %d", $wid);
   nice_dash_flush_caches();
   drupal_set_message(t('The widget has been removed'));
-  drupal_goto('admin/dashboard/configure');
+  drupal_goto('admin/build/dashboard');
 }
 
 /**
