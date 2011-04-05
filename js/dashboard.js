@@ -1,18 +1,13 @@
-Drupal.NiceDash = Drupal.NiceDash || {};
-
-$(document).ready(function(){
-  Drupal.NiceDash();
-});
-
-Drupal.NiceDash = function(){
+Drupal.behaviors.nicedDash = function(){
   initFilters();
   function initFilters(){
-    $('.view-filters').parent().before('<div class="filter-container"><a href="" class="toggle-link">Toggle filter</a></div><br class="clear" />');
-    $('.view-filters').toggle();
+    $('.filter-container').remove();
+    $('.view-filters form').before('<div class="filter-container"><div class="clear-block"><a href="" class="toggle-link">Toggle filter</a></div></div>');
+    $('.view-filters form').hide();
     $('.toggle-link').bind('click', toggleFilters);
   }
   function toggleFilters(e){
-    $(e.target).parent().parent().find('.view-filters').slideToggle();
+    $(e.target).parent().parent().siblings('form').slideToggle();
     e.preventDefault();
   }
 }
