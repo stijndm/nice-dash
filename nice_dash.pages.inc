@@ -219,7 +219,7 @@ function nice_dash_dashboard_settings_form(&$form_state, $did = NULL) {
 
   $url_alias = '';
   if (isset($dashboard->did)) {
-    $internal_path = 'admin/dashboard/view/'. $dashboard->did;
+    $internal_path = 'admin/dashboard/'. $dashboard->did;
     $db_alias = drupal_get_path_alias($internal_path);
     if ($internal_path != $db_alias) {
       $url_alias = $db_alias;
