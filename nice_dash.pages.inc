@@ -211,21 +211,13 @@ function nice_dash_dashboard_settings_form(&$form_state, $dashboard = NULL) {
     '#required' => TRUE,
   );
 
-  $url_alias = '';
-  if (isset($dashboard->did)) {
-    $internal_path = 'admin/dashboard/'. $dashboard->did;
-    $db_alias = drupal_get_path_alias($internal_path);
-    if ($internal_path != $db_alias) {
-      $url_alias = $db_alias;
-    }
-  }
-  $form['dashboard_alias'] = array(
+  $form['dashboard_machine_name'] = array(
     '#type' => 'textfield',
-    '#default_value' => str_replace('dashboard/', '', $url_alias),
-    '#title' => t('URL alias'),
+    '#default_value' => isset($dashboard->machine_name) ? $dashboard->machine_name : '',
+    '#title' => t('Machine name'),
     '#size' => 60,
     '#maxlength' => 128,
-    '#description' => t('The prefix will be \'dashboard/\'. All characters will be set to lowercase and spaces will be rewritten to hyphens.')
+    '#description' => t('Used for exporting the dashboard, als used as path for the dashboard. Only uppercase and lowercase letters, underscores or hyphens are allowed.')
   );
 
   $form['dashboard_access'] = array(
@@ -278,6 +270,7 @@ function nice_dash_dashboard_settings_form_validate(&$form, &$form_state) {
   $values = $form_state['values'];
   $did = $values['dashboard_id'];
   $dashboard_name = $values['dashboard_name'];
+  $machine_name = trim($values['dashboard_machine_name']);
 
   $query_values = array($dashboard_name);
   $query = "SELECT name FROM {nice_dash_dashboards} WHERE name = '%s'";
@@ -290,9 +283,22 @@ function nice_dash_dashboard_settings_form_validate(&$form, &$form_state) {
   if (db_result(db_query($query, $query_values))) {
     form_set_error('dashboard_name', t('Dashboard name %dashboard_name already exists.', array('%dashboard_name' => $dashboard_name)));
   }
+  
+  //validate machine name
+  $query_values = array($machine_name);
+  $query = "SELECT machine_name FROM {nice_dash_dashboards} WHERE machine_name = '%s'";
 
-  if (!preg_match('!^[ A-Za-z0-9_-]+$!', $dashboard_name)) {
-    form_set_error('dashboard_name', t('The dashboard name must contain only uppercase and lowercase letters, underscores or hyphens.'));
+  if (!empty($did)) {
+    $query .= ' AND did != %d';
+    $query_values[] = $did;
+  }
+
+  if (db_result(db_query($query, $query_values))) {
+    form_set_error('dashboard_machine_name', t('This machine name is already taken.'));
+  }
+
+  if (!preg_match('!^[A-Za-z_-]+$!', $machine_name)) {
+    form_set_error('dashboard_machine_name', t('The machine name can contain only uppercase and lowercase letters, underscores or hyphens.'));
   }
 }
 
@@ -305,11 +311,12 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
   // Dashboard
   $update_keys = array();
   $dashboard = new stdClass();
-  $dashboard->name = $values['dashboard_name'];
+  $dashboard->name = trim($values['dashboard_name']);
+  $dashboard->machine_name = trim($values['dashboard_machine_name']);
 
   // Access.
   $dashboard->access = '';
-  foreach($values['dashboard_access'] as $value) {
+  foreach ($values['dashboard_access'] as $value) {
     if ($value != 0) {
       $dashboard->access = serialize($values['dashboard_access']);
       break;
@@ -354,31 +361,12 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
     }
   }
 
-  // Path alias.
-  if (!empty($values['dashboard_alias'])) {
-    $alias = $values['dashboard_alias'];
-    if (module_exists('pathauto')) {
-      _pathauto_include();
-      $alias = pathauto_cleanstring($alias);
-    }
-    else {
-      $alias = str_replace(' ', '-', $alias);
-      $alias = strtolower($alias);
-    }
-    $alias = 'dashboard/'. $alias;
-    path_set_alias('admin/dashboard/'. $dashboard->did, $alias);
-  }
-  else {
-    path_set_alias('admin/dashboard/'. $dashboard->did);
-  }
-
   // Rebuild menu.
   nice_dash_flush_caches();
   module_invoke('menu', 'rebuild');
 
   // Success
   drupal_set_message(t('Saved dashboard.'));
-
 }
 
 /**

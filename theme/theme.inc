@@ -38,8 +38,8 @@ function template_preprocess_nice_dash_settings_form(&$vars) {
   $form = &$vars['form'];
 
   $above_widget_settings = drupal_render($form['dashboard_name']);
+  $above_widget_settings .= drupal_render($form['dashboard_machine_name']);
   $above_widget_settings .= drupal_render($form['dashboard_access']);
-  $above_widget_settings .= drupal_render($form['dashboard_alias']);
 
   $vars['above_widget_settings'] = $above_widget_settings;
   $vars['below_widget_settings'] = '';
