@@ -3,6 +3,8 @@
 /**
  * @file
  * Nice dash module.
+ *
+ * TODO: Load widgets by widget key
  */
 
 /**

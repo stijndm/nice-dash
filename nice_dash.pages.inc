@@ -173,6 +173,7 @@ function nice_dash_dashboard_settings_form(&$form_state, $dashboard = NULL) {
 
     foreach ($widgets as $widget) {
       // Fetch values for the widget.
+      //TODO: make this one query
       $default_values = _nice_dash_widget_values($widget->wid, $dashboard->did);
 
       $form['#widgets'][] = $widget->wid;
