@@ -132,8 +132,7 @@ function _nice_dash_menu() {
     'file' => 'nice_dash.pages.inc'
   );
   
-  //TODO: dashboard load function
-  $items['admin/build/dashboard/dashboards/%/edit'] = array(
+  $items['admin/build/dashboard/dashboards/%nice_dash_dashboard/edit'] = array(
     'title' => 'Edit dashboard',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('nice_dash_dashboard_settings_form', 4),
@@ -142,7 +141,7 @@ function _nice_dash_menu() {
     'file' => 'nice_dash.pages.inc'
   );
 
-  $items['admin/build/dashboard/dashboards/%/delete'] = array(
+  $items['admin/build/dashboard/dashboards/%nice_dash_dashboard/delete'] = array(
     'title' => 'Delete dashboard',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('nice_dash_dashboard_delete_form', 4),

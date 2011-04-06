@@ -252,6 +252,15 @@ function nice_dash_get_object($type = 'dashboard', $id = NULL) {
 }
 
 /**
+ * Menu loader function for a dashboard
+ */
+function nice_dash_dashboard_load($did) {
+  if (is_numeric($did)) {
+    return nice_dash_get_object('dashboard', $did);
+  }
+}
+
+/**
  * check if user has access to the dashboard
  */
 function nice_dash_dashboard_access($dashboard, $default_menu = FALSE) {

@@ -161,12 +161,9 @@ function nice_dash_dashboard_overview_page_submit(&$form, &$form_state) {
 /**
  * Menu callback for the dashboard settings page.
  */
-function nice_dash_dashboard_settings_form(&$form_state, $did = NULL) {
+function nice_dash_dashboard_settings_form(&$form_state, $dashboard = NULL) {
   $form = array();
 
-  if (isset($did)) {
-    $dashboard = nice_dash_get_object('dashboard', $did);
-  }
   $widgets = nice_dash_get_object('widget');
 
   if ($widgets) {
@@ -176,7 +173,7 @@ function nice_dash_dashboard_settings_form(&$form_state, $did = NULL) {
 
     foreach ($widgets as $widget) {
       // Fetch values for the widget.
-      $default_values = _nice_dash_widget_values($widget->wid, $did);
+      $default_values = _nice_dash_widget_values($widget->wid, $dashboard->did);
 
       $form['#widgets'][] = $widget->wid;
       $form[$widget->wid]['title'] = array('#value' => $widget->title);
@@ -238,7 +235,7 @@ function nice_dash_dashboard_settings_form(&$form_state, $did = NULL) {
   );
 
   // Current dashboard id.
-  $form['dashboard_id'] = array('#type' => 'value', '#value' => $did);
+  $form['dashboard_id'] = array('#type' => 'value', '#value' => $dashboard->did);
   return $form;
 }
 
