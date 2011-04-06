@@ -105,7 +105,6 @@ function nice_dash_dashboard_overview_page() {
   $form['#theme'] = 'nice_dash_overview';
 
   $dashboards = nice_dash_get_object();
-  $output = '<h2>'. t('Dashboards') .'</h2>';
 
   if (count($dashboards) > 0) {
 
@@ -137,10 +136,6 @@ function nice_dash_dashboard_overview_page() {
       '#value' => t('Save'),
     );
 
-  }
-  else {
-    drupal_set_message(t('You have to create a dashboard first. You can create your first dashboard on the <a href="@create-page">dashboard create page</a>.', array('@create-page' => url("admin/build/dashboard/dashboards/add"))), 'warning');
-    $output .= '<p>'. t('No dashboards configured.') .'</p>';
   }
 
   return $form;
