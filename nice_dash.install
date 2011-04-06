@@ -38,6 +38,12 @@ function nice_dash_schema() {
         'length' => '128',
         'not null' => TRUE,
       ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -46,6 +52,11 @@ function nice_dash_schema() {
       'access' => array(
         'type' => 'text',
         'not null' => TRUE,
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
     'primary key' => array('did'),
@@ -120,5 +131,15 @@ function nice_dash_update_6201() {
   $ret = array();
   db_add_field($ret, 'nice_dash_widgets', 'widget_plugin', array('type' => 'varchar', 'not null' => TRUE, 'length' => '128', 'default' => ''));
   db_add_field($ret, 'nice_dash_dashboards', 'access', array('type' => 'text', 'not null' => TRUE));
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function nice_dash_update_6202() {
+  $ret = array();
+  db_add_field($ret, 'nice_dash_dashboards', 'machine_name', array('type' => 'varchar', 'not null' => TRUE, 'length' => '128', 'default' => ''));
+  db_add_field($ret, 'nice_dash_dashboards', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
   return $ret;
 }
