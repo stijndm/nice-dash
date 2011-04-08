@@ -36,7 +36,7 @@ function nice_dash_settings($form_state) {
  * Submit function for settings form.
  */
 function nice_dash_settings_submit($form, &$form_state) {
-  module_invoke('menu', 'rebuild');
+  variable_set('menu_rebuild_needed', TRUE);
 }
 
 /**
@@ -154,7 +154,7 @@ function nice_dash_dashboard_overview_page_submit(&$form, &$form_state) {
   }
   
   nice_dash_flush_caches();
-  module_invoke('menu', 'rebuild');
+  variable_set('menu_rebuild_needed', TRUE);
   drupal_set_message(t('Your settings have been saved.'));
 }
 
@@ -363,7 +363,7 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
 
   // Rebuild menu.
   nice_dash_flush_caches();
-  module_invoke('menu', 'rebuild');
+  variable_set('menu_rebuild_needed', TRUE);
 
   // Success
   drupal_set_message(t('Saved dashboard.'));
@@ -402,7 +402,7 @@ function nice_dash_dashboard_delete_form_submit($form, &$form_state) {
 
   // Rebuild menu.
   nice_dash_flush_caches();
-  module_invoke('menu', 'rebuild');
+  variable_set('menu_rebuild_needed', TRUE);
 
   drupal_set_message(t('The dashboard has been removed'));
   drupal_goto('admin/build/dashboard');
