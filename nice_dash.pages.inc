@@ -410,6 +410,39 @@ function nice_dash_dashboard_delete_form_submit($form, &$form_state) {
 }
 
 /**
+ * Widget overview page
+ */
+function nice_dash_widget_overview_page() {
+
+  $header = array(t('Title'), t('Description'), t('Actions'));
+  $rows = array();
+
+  //custom widgets
+  $custom_widgets = nice_dash_get_object('widget_custom');
+  //$rows[] = array(array('data' => '<strong>'. t('Custom Widgets') .'</strong>', 'colspan' => 3));
+
+  if (count($custom_widgets)) {
+    foreach ($custom_widgets as $widget) {
+      $actions = array();
+      $actions[] = l(t('Edit'), 'admin/build/dashboard/widgets/'. $widget->wid .'/edit');
+      $actions[] = l(t('Delete'), 'admin/build/dashboard/widgets/'. $widget->wid .'/delete');
+
+      $rows[] = array(
+        $widget->title,
+        $widget->description,
+        implode(' | ', $actions),
+      );
+    }
+  }
+  else {
+    $message = t('There are currently no custom widgets.') .' '. l(t('Create a new widget.'), 'admin/build/dashboard/widgets/add');
+    $rows[] = array(array('data' => $message, 'colspan' => 3));
+  }
+
+  return theme('table', $header, $rows);
+}
+
+/**
  * Widget settings form.
  */
 function nice_dash_widget_settings_form(&$form_state, $wid = NULL) {

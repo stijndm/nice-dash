@@ -151,11 +151,9 @@ function _nice_dash_menu() {
   );
   
   //admin widgets
-  //TODO: widgets overview
   $items['admin/build/dashboard/widgets'] = array(
     'title' => 'Widgets',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('nice_dash_dashboard_overview_page'),
+    'page callback' => 'nice_dash_widget_overview_page',
     'access arguments' => array('administer nice dashboard'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
