@@ -491,7 +491,7 @@ function nice_dash_widget_settings_form(&$form_state, $wid = NULL) {
   }
 
   $form['wid'] = array('#type' => 'value', '#value' => $wid);
-  $form['#redirect'] = 'admin/build/dashboard';
+  $form['#redirect'] = 'admin/build/dashboard/widgets';
 
   return $form;
 }
@@ -531,7 +531,7 @@ function nice_dash_widget_delete_form($form_state, $wid) {
   return confirm_form(
     $form,
     t('Are your sure you want to delete the widget'),
-    'admin/build/dashboard',
+    'admin/build/dashboard/widgets',
     t('This action cannot be undone.'),
     t('Delete')
   );
