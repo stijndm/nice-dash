@@ -217,7 +217,8 @@ function nice_dash_dashboard_settings_form(&$form_state, $dashboard = NULL) {
     '#title' => t('Machine name'),
     '#size' => 60,
     '#maxlength' => 128,
-    '#description' => t('Used for exporting the dashboard, als used as path for the dashboard. Only uppercase and lowercase letters, underscores or hyphens are allowed.')
+    '#description' => t('Used for exporting the dashboard, als used as path for the dashboard. Only uppercase and lowercase letters, underscores or hyphens are allowed.'),
+    '#required' => TRUE,
   );
 
   $form['dashboard_access'] = array(
