@@ -385,3 +385,13 @@ function nice_dash_menu_callback_form_submit($form, &$form_state) {
   $callback_submit_function = $form['#callback_method'] .'_submit';
   $object->$callback_submit_function($form, $form_state);
 }
+
+/**
+ * Implementation of hook_views_api().
+ */
+function nice_dash_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'nice_dash') .'/includes',
+  );
+}
