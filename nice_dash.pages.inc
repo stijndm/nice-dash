@@ -622,6 +622,8 @@ function nice_dash_plugins_settings_form(&$form_state) {
 function nice_dash_plugins_settings_form_submit(&$form, &$form_state) {
   variable_set('nice_dash_visibility', serialize($form_state['values']['plugins']));
   cache_clear_all('nice_dash', 'cache', TRUE);
+
+  drupal_set_message(t('The plugins have been saved.'));
 }
 
 /**
