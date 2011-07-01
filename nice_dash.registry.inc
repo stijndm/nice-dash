@@ -12,7 +12,9 @@
  */
 function _nice_dash_get_dashboards() {
   $rows = array();
-  $result = db_query("SELECT * FROM {nice_dash_dashboards} ORDER BY weight ASC");
+  $result = db_query("SELECT d.did, d.name, d.machine_name, d.weight, d.access, d.status
+    FROM {nice_dash_dashboards} d
+    ORDER BY d.weight ASC");
 
   while ($row = db_fetch_object($result)) {
     $rows[$row->did] = $row;
@@ -94,7 +96,7 @@ function _nice_dash_get_custom_widgets() {
  * Return menu items.
  */
 function _nice_dash_menu() {
-  
+
   //admin
   $items['admin/build/dashboard'] = array(
     'title' => 'Dashboard',
@@ -115,13 +117,13 @@ function _nice_dash_menu() {
     'weight' => 0,
     'file' => 'nice_dash.pages.inc'
   );
-  
+
   $items['admin/build/dashboard/dashboards/list'] = array(
     'title' => 'Overview',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0
   );
-  
+
   $items['admin/build/dashboard/dashboards/add'] = array(
     'title' => 'Create new dashboard',
     'page callback' => 'drupal_get_form',
@@ -131,7 +133,7 @@ function _nice_dash_menu() {
     'weight' => 1,
     'file' => 'nice_dash.pages.inc'
   );
-  
+
   $items['admin/build/dashboard/dashboards/%nice_dash_dashboard/edit'] = array(
     'title' => 'Edit dashboard',
     'page callback' => 'drupal_get_form',
@@ -149,7 +151,7 @@ function _nice_dash_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'nice_dash.pages.inc'
   );
-  
+
   //admin widgets
   $items['admin/build/dashboard/widgets'] = array(
     'title' => 'Widgets',
@@ -159,13 +161,13 @@ function _nice_dash_menu() {
     'weight' => 1,
     'file' => 'nice_dash.pages.inc'
   );
-  
+
   $items['admin/build/dashboard/widgets/list'] = array(
     'title' => 'Overview',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0
   );
-  
+
   $items['admin/build/dashboard/widgets/add'] = array(
     'title' => 'Create widget',
     'page callback' => 'drupal_get_form',
@@ -205,7 +207,7 @@ function _nice_dash_menu() {
     'weight' => 2,
     'file' => 'nice_dash.pages.inc'
   );
-  
+
   //admin plugins
   $items['admin/build/dashboard/plugins'] = array(
     'title' => 'Plugins',
@@ -232,7 +234,7 @@ function _nice_dash_menu() {
 
   if (count($dashboards) > 0) {
     foreach ($dashboards as $dashboard) {
-      $items['admin/dashboard/'. $dashboard->did] = array(
+      $items['admin/dashboard/'. $dashboard->machine_name] = array(
         'title' => $dashboard->name,
         'page callback' => 'nice_dash_dashboard_page',
         'page arguments' => array(2),

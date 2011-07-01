@@ -96,10 +96,10 @@ function template_preprocess_nice_dash_settings_form(&$vars) {
  * Preprocess function for the dashboard overview form.
  */
 function template_preprocess_nice_dash_overview(&$vars) {
-  
+
   $form = &$vars['form'];
   $rows = array();
-  
+
   if ($form['#dashboards']) {
     asort($form['#dashboards']);
     foreach ($form['#dashboards'] as $did => $weight) {
@@ -107,6 +107,7 @@ function template_preprocess_nice_dash_overview(&$vars) {
       $row->title = drupal_render($form[$did]['title']);
       $row->weight = drupal_render($form[$did]['weight']);
       $row->did = drupal_render($form[$did]['did']);
+      $row->machine_name = drupal_render($form[$did]['machine_name']);
       $rows[] = $row;
     }
   }

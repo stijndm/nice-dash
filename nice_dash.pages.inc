@@ -42,21 +42,27 @@ function nice_dash_settings_submit($form, &$form_state) {
 /**
  * Menu callback for the dashboard page.
  */
-function nice_dash_dashboard_page($did = NULL) {
+function nice_dash_dashboard_page($machine_name = NULL) {
 
   $regions = array();
   $widgets = nice_dash_get_object('widget');
   if ($widgets) {
 
     // Fetch the default dashboard.
-    if (!$did) {
-      $did = db_result(db_query("SELECT did FROM {nice_dash_dashboards} ORDER BY weight ASC LIMIT 1"));
+    if (!$machine_name) {
+      $dashboard = db_result(db_query("SELECT d.did, d.machine_name FROM {nice_dash_dashboards} ORDER BY weight ASC LIMIT 1"));
+      $machine_name = $dashboard->machine_name;
+      $did = $dashboard->did;
+    }
+    else {
+      $did = db_result(db_query('SELECT d.did FROM {nice_dash_dashboards} d WHERE d.machine_name = "%s" LIMIT 1', $machine_name));
     }
 
-    $result = db_query("SELECT * FROM {nice_dash_config} c
-                        LEFT JOIN {nice_dash_widgets} w  ON c.wid = w.wid
-                        WHERE did = %d
-                        ORDER BY weight", $did);
+    $result = db_query('SELECT c.did, c.weight, c.region, w.wid, w.widget_key, w.widget_plugin, w.title, w.description, w.custom
+                        FROM {nice_dash_config} c
+                        LEFT JOIN {nice_dash_widgets} w ON c.wid = w.wid
+                        WHERE c.did = %d
+                        ORDER BY c.weight', $did);
 
     while ($row = db_fetch_object($result)) {
       $widget = '';
@@ -121,6 +127,7 @@ function nice_dash_dashboard_overview_page() {
       $form['#dashboards'][$dashboard->did] = $dashboard->weight;
       $form[$dashboard->did]['title'] = array('#value' => $dashboard->name);
       $form[$dashboard->did]['did'] = array('#value' => $dashboard->did);
+      $form[$dashboard->did]['machine_name'] = array('#value' => $dashboard->machine_name);
       $form[$dashboard->did]['weight'] = array(
         '#type' => 'weight',
         '#delta' => 10,
@@ -152,7 +159,7 @@ function nice_dash_dashboard_overview_page_submit(&$form, &$form_state) {
     $object->did = $form[$did]['did']['#value'];
     drupal_write_record('nice_dash_dashboards', $object, 'did');
   }
-  
+
   nice_dash_flush_caches();
   variable_set('menu_rebuild_needed', TRUE);
   drupal_set_message(t('Your settings have been saved.'));
@@ -186,7 +193,7 @@ function nice_dash_dashboard_settings_form(&$form_state, $dashboard = NULL) {
           'class' => 'field-region-select field-region-disabled ',
         ),
       );
-     
+
       $form[$widget->wid]['weight'] = array('#type' => 'weight', '#delta' => 1, '#default_value' => $default_values['weight']);
     }
 
@@ -284,7 +291,7 @@ function nice_dash_dashboard_settings_form_validate(&$form, &$form_state) {
   if (db_result(db_query($query, $query_values))) {
     form_set_error('dashboard_name', t('Dashboard name %dashboard_name already exists.', array('%dashboard_name' => $dashboard_name)));
   }
-  
+
   //validate machine name
   $query_values = array($machine_name);
   $query = "SELECT machine_name FROM {nice_dash_dashboards} WHERE machine_name = '%s'";
@@ -373,10 +380,9 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
 /**
  * Confirm delete form for dashboards
  */
-function nice_dash_dashboard_delete_form($form_state, $did) {
+function nice_dash_dashboard_delete_form($form_state, $dashboard) {
   $form = array();
-  $form['did'] = array('#value' => $did, '#type' => 'value');
-  $dashboard = nice_dash_get_object('dashboard', $did);
+  $form['did'] = array('#value' => $dashboard->did, '#type' => 'value');
 
   if (empty($dashboard)) {
     drupal_set_message(t('The dashboard you want to delete does not exist. Go back to the <a href="@overview-page">dashboard overview page</a>.', array('@overview-page' => url("admin/dashboard/configure"))), 'warning');

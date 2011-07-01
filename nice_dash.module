@@ -271,14 +271,14 @@ function nice_dash_dashboard_access($dashboard, $default_menu = FALSE) {
 
   if ($user->uid == 1 || (empty($dashboard->access) && user_access('view nice dashboard'))) {
     if (isset($default_menu)) {
-      _nice_dash_set_default_menu_task($dashboard->did);
+      _nice_dash_set_default_menu_task($dashboard->machine_name);
     }
     return TRUE;
   }
   foreach (unserialize($dashboard->access) as $key => $value) {
     if ($value != 0 && array_key_exists($key, $user->roles)) {
       if (isset($default_menu)) {
-        _nice_dash_set_default_menu_task($dashboard->did);
+        _nice_dash_set_default_menu_task($dashboard->machine_name);
       }
       return TRUE;
     }
@@ -301,11 +301,11 @@ function _nice_dash_dashboard_access() {
  * set the dashboard did for the default local menu task
  */
 function _nice_dash_set_default_menu_task($dashboard = NULL) {
-  static $did;
-  if (!isset($did) && isset($dashboard)) {
-    $did = $dashboard;
+  static $machine_name;
+  if (!isset($machine_name) && isset($dashboard)) {
+    $machine_name = $dashboard;
   }
-  return $did;
+  return $machine_name;
 }
 
 /**
@@ -313,8 +313,8 @@ function _nice_dash_set_default_menu_task($dashboard = NULL) {
  */
 function _nice_dash_dashboard_page() {
   _nice_dash_dashboard_access();
-  $did = _nice_dash_set_default_menu_task();
-  $url = !empty($did) ? 'admin/dashboard/' . $did : 'admin/build/dashboard/dashboards/add';
+  $machine_name = _nice_dash_set_default_menu_task();
+  $url = !empty($machine_name) ? 'admin/dashboard/' . $machine_name : 'admin/build/dashboard/dashboards/add';
   return drupal_goto($url);
 }
 
