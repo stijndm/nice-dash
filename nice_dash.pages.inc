@@ -375,6 +375,7 @@ function nice_dash_dashboard_settings_form_submit(&$form, &$form_state) {
 
   // Success
   drupal_set_message(t('Saved dashboard.'));
+  drupal_goto('admin/build/dashboard');
 }
 
 /**
